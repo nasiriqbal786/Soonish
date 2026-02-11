@@ -1,7 +1,7 @@
 {
   "name": "soonish",
   "private": true,
-  "version": "0.0.10",
+  "version": "0.0.13",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "android": "npm version patch --no-git-tag-version && npm run build && npx cap sync android",
-    "build:apk": "npm run android && cd android && gradlew assembleDebug && copy app\\build\\outputs\\apk\\debug\\app-debug.apk soonish.apk"
+    "build:apk": "npm run android && cd android && gradlew assembleDebug && copy app\\build\\outputs\\apk\\debug\\app-debug.apk app-debug.apk"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.2",
