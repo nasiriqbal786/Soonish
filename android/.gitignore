@@ -2,6 +2,7 @@
 
 # Built application files
 *.apk
+!soonish.apk
 *.aar
 *.ap_
 *.aab
