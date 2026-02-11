@@ -1,7 +1,7 @@
 {
   "name": "soonish",
   "private": true,
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "android": "npm version patch --no-git-tag-version && npm run build && npx cap sync android",
-    "build:apk": "npm run android && cd android && gradlew assembleDebug && copy app\\build\\outputs\\apk\\debug\\app-debug.apk app-debug.apk"
+    "build:apk": "npm run android && cd android && gradlew assembleDebug && node -e \"const pkg = require('../package.json'); const fs = require('fs'); const dest = 'Soonish-v' + pkg.version + '.apk'; fs.copyFileSync('app/build/outputs/apk/debug/app-debug.apk', dest); console.log('Copied to ' + dest);\""
   },
   "dependencies": {
     "@capacitor/android": "^8.0.2",
