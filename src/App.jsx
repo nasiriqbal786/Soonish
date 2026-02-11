@@ -3,6 +3,8 @@ import ReminderInput from './components/ReminderInput'
 import TimeSelector from './components/TimeSelector'
 import RemindButton from './components/RemindButton'
 import ReminderList from './components/ReminderList'
+import SettingsView from './components/SettingsView'
+import Footer from './components/Footer'
 import { notificationManager } from './services/NotificationManager'
 import { Capacitor } from '@capacitor/core'
 import './App.css'
@@ -10,6 +12,14 @@ import './App.css'
 function App() {
   const [inputValue, setInputValue] = useState('')
   const [selectedDuration, setSelectedDuration] = useState(30) // Default 30m
+  const [currentView, setCurrentView] = useState('home') // 'home' | 'settings'
+
+  // Settings State
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('soonish-settings')
+    return saved ? JSON.parse(saved) : { deferTime: '09:00' }
+  })
+
   const [reminders, setReminders] = useState(() => {
     const saved = localStorage.getItem('soonish-reminders')
     return saved ? JSON.parse(saved) : []
@@ -19,6 +29,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('soonish-reminders', JSON.stringify(reminders))
   }, [reminders])
+
+  useEffect(() => {
+    localStorage.setItem('soonish-settings', JSON.stringify(settings))
+  }, [settings])
 
   // Timer Loop (Foreground UI Updates)
   useEffect(() => {
@@ -113,12 +127,15 @@ function App() {
     const activeReminders = reminders.filter(r => r.remaining > 0)
     if (activeReminders.length === 0) return
 
-    if (!window.confirm(`Defer ${activeReminders.length} reminders to tomorrow 9 AM?`)) return
+    if (!window.confirm(`Defer ${activeReminders.length} reminders to tomorrow ${settings.deferTime}?`)) return
 
-    // Calculate tomorrow 9 AM
+    // Parse Settings Time
+    const [hours, minutes] = settings.deferTime.split(':').map(Number)
+
+    // Calculate tomorrow at configured time
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
-    tomorrow.setHours(9, 0, 0, 0)
+    tomorrow.setHours(hours, minutes, 0, 0)
 
     const now = Date.now()
     const secondsUntilTomorrow = Math.ceil((tomorrow.getTime() - now) / 1000)
@@ -145,30 +162,50 @@ function App() {
 
   return (
     <div className="app-container">
-      <header>
-        <h1>Soonish</h1>
-        <button
-          className="defer-button"
-          onClick={handleDeferAll}
-          aria-label="Defer all to tomorrow 9am"
-          title="Deferred all to tomorrow 9am"
-        >
-          🌙
-        </button>
-      </header>
-      <main>
-        <section className="input-section">
-          <ReminderInput value={inputValue} onChange={setInputValue} />
-          <TimeSelector selectedDuration={selectedDuration} onSelect={setSelectedDuration} />
-          <RemindButton onClick={handleAddReminder} disabled={!inputValue.trim()} />
-        </section>
+      {currentView === 'home' ? (
+        <>
+          <header>
+            <h1>Soonish</h1>
+            <div className="header-actions">
+              <button
+                className="icon-button"
+                onClick={handleDeferAll}
+                aria-label={`Defer all to tomorrow ${settings.deferTime}`}
+                title={`Defer all to tomorrow ${settings.deferTime}`}
+              >
+                🌙
+              </button>
+              <button
+                className="icon-button"
+                onClick={() => setCurrentView('settings')}
+                aria-label="Settings"
+              >
+                ⚙️
+              </button>
+            </div>
+          </header>
+          <main>
+            <section className="input-section">
+              <ReminderInput value={inputValue} onChange={setInputValue} />
+              <TimeSelector selectedDuration={selectedDuration} onSelect={setSelectedDuration} />
+              <RemindButton onClick={handleAddReminder} disabled={!inputValue.trim()} />
+            </section>
 
-        <ReminderList
-          reminders={reminders}
-          onDelete={handleDelete}
-          onSnooze={handleSnooze}
+            <ReminderList
+              reminders={reminders}
+              onDelete={handleDelete}
+              onSnooze={handleSnooze}
+            />
+          </main>
+        </>
+      ) : (
+        <SettingsView
+          settings={settings}
+          onSave={setSettings}
+          onBack={() => setCurrentView('home')}
         />
-      </main>
+      )}
+      <Footer />
     </div>
   )
 }
