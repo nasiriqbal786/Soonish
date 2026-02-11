@@ -6,13 +6,18 @@ header {
   margin-bottom: var(--spacing-lg);
 }
 
+.header-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
 h1 {
   font-size: 28px;
   font-weight: 800;
   letter-spacing: -1px;
 }
 
-.defer-button {
+.icon-button {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-radius: 50%;
@@ -26,9 +31,9 @@ h1 {
   font-size: 20px;
 }
 
-.defer-button:hover {
+.icon-button:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: rotate(-15deg);
+  transform: rotate(-10deg);
 }
 
 .app-container {

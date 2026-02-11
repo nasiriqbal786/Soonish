@@ -1,0 +1,58 @@
+.settings-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    gap: var(--spacing-md);
+}
+
+.back-button {
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 8px 0;
+}
+
+.settings-header h2 {
+    font-size: 24px;
+}
+
+.setting-item {
+    background: var(--surface-color);
+    padding: var(--spacing-md);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.setting-item label {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.setting-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-sm);
+}
+
+.time-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: var(--spacing-sm);
+    border-radius: 8px;
+    font-size: 18px;
+    width: 100%;
+    font-family: inherit;
+}
+
+.time-input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
