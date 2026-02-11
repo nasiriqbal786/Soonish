@@ -1,0 +1,21 @@
+{
+  "name": "Soonish",
+  "short_name": "Soonish",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#8A2BE2",
+  "description": "A minimalist reminder app.",
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

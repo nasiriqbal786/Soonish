@@ -1,0 +1,79 @@
+.reminder-list {
+    width: 100%;
+}
+
+.list-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reminder-item {
+    background: var(--surface-color);
+    border-radius: 12px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.3s ease-out;
+}
+
+.reminder-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.reminder-text {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.reminder-time {
+    font-size: 14px;
+    color: var(--accent-color);
+    margin-top: 4px;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.action-btn.done {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+.action-btn.done:hover {
+    background: var(--surface-color);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.action-btn.snooze {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    margin-right: var(--spacing-sm);
+}
+
+.action-btn.snooze:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

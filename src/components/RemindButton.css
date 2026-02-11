@@ -1,0 +1,32 @@
+.remind-button {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--accent-color);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    margin-bottom: var(--spacing-xl);
+}
+
+.remind-button:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(138, 43, 226, 0.4);
+}
+
+.remind-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.remind-button:disabled {
+    background: var(--surface-color);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}

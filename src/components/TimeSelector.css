@@ -1,0 +1,30 @@
+.time-selector {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.time-pill {
+    flex: 1;
+    padding: var(--spacing-sm) 0;
+    border-radius: 50px;
+    background: var(--surface-color);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.time-pill:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+.time-pill.active {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+}

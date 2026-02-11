@@ -1,0 +1,39 @@
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.defer-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 20px;
+}
+
+.defer-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(-15deg);
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  /*   gap: var(--spacing-lg); */
+  height: 100%;
+}

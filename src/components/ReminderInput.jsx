@@ -1,0 +1,18 @@
+import './ReminderInput.css'
+
+function ReminderInput({ value, onChange }) {
+    return (
+        <div className="input-group">
+            <input
+                type="text"
+                className="reminder-input"
+                placeholder="What’s the plan?"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                autoFocus
+            />
+        </div>
+    )
+}
+
+export default ReminderInput
