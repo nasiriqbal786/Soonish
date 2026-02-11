@@ -36,4 +36,6 @@ h1 {
   flex-direction: column;
   /*   gap: var(--spacing-lg); */
   height: 100%;
+  padding-top: env(safe-area-inset-top);
+  padding-top: constant(safe-area-inset-top);
 }
