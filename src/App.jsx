@@ -92,6 +92,23 @@ function App() {
     }
   }
 
+  // Handle Notification Actions
+  useEffect(() => {
+    if (Capacitor.getPlatform() !== 'web') {
+      import('@capacitor/local-notifications').then(({ LocalNotifications }) => {
+        LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
+          console.log('[App] Action Performed:', action)
+          if (action.actionId === 'SNOOZE') {
+            // Default snooze 10m from notification action
+            handleSnooze(action.notification.id, 10)
+          } else if (action.actionId === 'DISMISS') {
+            handleDelete(action.notification.id)
+          }
+        })
+      })
+    }
+  }, [])
+
   const handleAddReminder = async () => {
     console.log('[App] handleAddReminder called')
     if (!inputValue.trim()) {
@@ -107,7 +124,7 @@ function App() {
 
       if (permission !== 'granted') {
         const msg = permission === 'denied'
-          ? 'Notifications are blocked. Please enable them in your browser settings.'
+          ? 'Notifications are blocked. Please enable them in your device settings.'
           : 'Notification permission is required to set reminders.'
         setPermissionError(msg)
         return

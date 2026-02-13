@@ -6,6 +6,41 @@ class NotificationManager {
         this.platform = Capacitor.getPlatform()
     }
 
+    async init() {
+        if (this.platform !== 'web') {
+            // Create High Importance Channel
+            await LocalNotifications.createChannel({
+                id: 'soonish_alarm',
+                name: 'Soonish Alarms',
+                description: 'High importance notifications for reminders',
+                importance: 5, // IMPORTANCE_HIGH
+                visibility: 1, // VISIBILITY_PUBLIC
+                sound: 'beep.wav', // optional, falls back to default
+                vibration: true,
+            })
+
+            // Register Actions
+            await LocalNotifications.registerActionTypes({
+                types: [{
+                    id: 'ALARM_ACTIONS',
+                    actions: [
+                        {
+                            id: 'SNOOZE',
+                            title: 'Snooze 10m', // Default snooze for notification action
+                            foreground: true
+                        },
+                        {
+                            id: 'DISMISS',
+                            title: 'Dismiss',
+                            foreground: true,
+                            destructive: true
+                        }
+                    ]
+                }]
+            })
+        }
+    }
+
     async requestPermissions() {
         console.log('[NotificationManager] Requesting permissions...')
         if (this.platform === 'web') {
@@ -17,6 +52,7 @@ class NotificationManager {
             console.log('[NotificationManager] Web permission already:', Notification.permission)
             return Notification.permission
         } else {
+            await this.init() // Ensure channel/actions are set up
             const result = await LocalNotifications.requestPermissions()
             console.log('[NotificationManager] Native permission result:', result)
             return result.display
@@ -39,10 +75,14 @@ class NotificationManager {
                     title,
                     body,
                     id,
-                    schedule: { at: new Date(Date.now() + seconds * 1000) },
-                    sound: null,
+                    schedule: {
+                        at: new Date(Date.now() + seconds * 1000),
+                        allowWhileIdle: true // Try to wake up device
+                    },
+                    sound: null, // Uses channel sound
                     attachments: null,
-                    actionTypeId: "",
+                    actionTypeId: "ALARM_ACTIONS",
+                    channelId: "soonish_alarm",
                     extra: null
                 }
             ]
