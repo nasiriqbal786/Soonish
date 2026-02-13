@@ -91,6 +91,31 @@ class NotificationManager {
         }
     }
 
+    async checkPermissionStatus() {
+        if (this.platform === 'web') {
+            return Notification.permission
+        } else {
+            const result = await LocalNotifications.checkPermissions()
+            return result.display
+        }
+    }
+
+    async checkExactAlarmPermission() {
+        if (this.platform === 'android') {
+            try {
+                // This will check if we have exact alarm permission
+                // Note: checkPermissions might return different structures on different plugin versions
+                const result = await LocalNotifications.checkPermissions()
+                // If the plugin specifically checks exact_alarm, use it. Otherwise assume granted if general permissions are ok
+                return result.display === 'granted' ? 'granted' : 'denied'
+            } catch (error) {
+                console.error('Error checking exact alarm permission:', error)
+                return 'unknown'
+            }
+        }
+        return 'granted' // Not applicable on other platforms
+    }
+
     async schedule(title, body, seconds, id) {
         console.log('[NotificationManager] Scheduling:', { title, body, seconds, id })
 

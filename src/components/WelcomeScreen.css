@@ -1,0 +1,118 @@
+.welcome-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.welcome-content {
+    max-width: 500px;
+    text-align: center;
+    width: 100%;
+}
+
+.welcome-content h1 {
+    font-size: 36px;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 800;
+}
+
+.tagline {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: var(--spacing-xl);
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    text-align: left;
+}
+
+.feature {
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.feature-icon {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+}
+
+.feature h3 {
+    font-size: 16px;
+    margin: 0 0 4px 0;
+}
+
+.feature p {
+    font-size: 13px;
+    opacity: 0.8;
+    margin: 0;
+}
+
+.permission-notice {
+    background: rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-md);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.permission-notice p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.get-started-button {
+    width: 100%;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-bottom: var(--spacing-sm);
+}
+
+.get-started-button:hover {
+    transform: translateY(-2px);
+}
+
+.get-started-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.skip-button {
+    background: transparent;
+    border: none;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: var(--spacing-sm);
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.skip-button:hover {
+    opacity: 1;
+}

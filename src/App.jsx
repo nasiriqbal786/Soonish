@@ -4,6 +4,7 @@ import TimeSelector from './components/TimeSelector'
 import RemindButton from './components/RemindButton'
 import ReminderList from './components/ReminderList'
 import SettingsView from './components/SettingsView'
+import WelcomeScreen from './components/WelcomeScreen'
 import Footer from './components/Footer'
 import { notificationManager } from './services/NotificationManager'
 import { Capacitor } from '@capacitor/core'
@@ -19,6 +20,10 @@ function App() {
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('soonish-settings')
     return saved ? JSON.parse(saved) : { deferTime: '09:00' }
+  })
+
+  const [hasOnboarded, setHasOnboarded] = useState(() => {
+    return localStorage.getItem('soonish-onboarded') === 'true'
   })
 
   const [reminders, setReminders] = useState(() => {
@@ -261,57 +266,95 @@ function App() {
     }))
   }
 
+  if (!hasOnboarded) {
+    return <WelcomeScreen onComplete={() => setHasOnboarded(true)} />
+  }
+
+  if (currentView === 'settings') {
+    return (
+      <SettingsView
+        settings={settings}
+        onSave={setSettings}
+        onBack={() => setCurrentView('home')}
+      />
+    )
+  }
+
   return (
     <div className="app-container">
-      {currentView === 'home' ? (
-        <>
-          <header>
-            <h1>Soonish</h1>
-            <div className="header-actions">
-              <button
-                className="icon-button"
-                onClick={handleDeferAll}
-                aria-label={`Defer all to tomorrow ${settings.deferTime}`}
-                title={`Defer all to tomorrow ${settings.deferTime}`}
-              >
-                🌙
-              </button>
-              <button
-                className="icon-button"
-                onClick={() => setCurrentView('settings')}
-                aria-label="Settings"
-              >
-                ⚙️
-              </button>
-            </div>
-          </header>
-          {permissionError && (
-            <div className="error-banner">
-              <span>{permissionError}</span>
-              <button onClick={() => setPermissionError(null)}>Dismiss</button>
-            </div>
-          )}
-          <main>
-            <section className="input-section">
-              <ReminderInput value={inputValue} onChange={setInputValue} />
-              <TimeSelector selectedDuration={selectedDuration} onSelect={setSelectedDuration} />
-              <RemindButton onClick={handleAddReminder} disabled={!inputValue.trim()} />
-            </section>
+      <header>
+        <h1>Soonish</h1>
+        <div className="header-actions">
+          <button
+            className="icon-button"
+            onClick={handleDeferAll}
+            aria-label={`Defer all to tomorrow ${settings.deferTime}`}
+            title={`Defer all to tomorrow ${settings.deferTime}`}
+          >
+            🌙
+          </button>
+          <button
+            className="icon-button"
+            onClick={() => setCurrentView('settings')}
+            aria-label="Settings"
+          >
+            ⚙️
+          </button>
+        </div>
+      </header>
 
-            <ReminderList
-              reminders={reminders}
-              onDelete={handleDelete}
-              onSnooze={handleSnooze}
-            />
-          </main>
-        </>
-      ) : (
-        <SettingsView
-          settings={settings}
-          onSave={setSettings}
-          onBack={() => setCurrentView('home')}
-        />
+      {permissionError && (
+        <div className="permission-error-card">
+          <div className="error-header">
+            <div className="error-icon">⚠️</div>
+            <h3>Notifications Blocked</h3>
+          </div>
+
+          <p className="error-message">
+            {permissionError}
+          </p>
+
+          <div className="error-actions">
+            <button
+              className="primary-action"
+              onClick={openAppSettings}
+            >
+              Open Settings
+            </button>
+
+            <button
+              className="secondary-action"
+              onClick={() => setPermissionError(null)}
+            >
+              Dismiss
+            </button>
+          </div>
+
+          <details className="help-section">
+            <summary>How to enable notifications</summary>
+            <ol>
+              <li>Tap "Open Settings" above</li>
+              <li>Find "Notifications" or "App notifications"</li>
+              <li>Toggle notifications ON for Soonish</li>
+              <li>Return to the app and try again</li>
+            </ol>
+          </details>
+        </div>
       )}
+
+      <main>
+        <section className="input-section">
+          <ReminderInput value={inputValue} onChange={setInputValue} />
+          <TimeSelector selectedDuration={selectedDuration} onSelect={setSelectedDuration} />
+          <RemindButton onClick={handleAddReminder} disabled={!inputValue.trim()} />
+        </section>
+
+        <ReminderList
+          reminders={reminders}
+          onDelete={handleDelete}
+          onSnooze={handleSnooze}
+        />
+      </main>
       <Footer />
     </div>
   )
