@@ -68,12 +68,63 @@
     background: rgba(255, 255, 255, 0.2);
 }
 
-.action-btn.snooze {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-color);
-    margin-right: var(--spacing-sm);
+/* Snooze Actions */
+.snooze-actions {
+  display: flex;
+  gap: 6px;
+  margin-right: var(--spacing-sm);
 }
 
-.action-btn.snooze:hover {
-    background: rgba(255, 255, 255, 0.2);
+.action-btn.snooze-quick {
+  padding: 6px 10px;
+  font-size: 12px;
+  min-width: 50px;
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 6px;
+  color: #ffc107;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn.snooze-quick:hover {
+  background: rgba(255, 193, 7, 0.25);
+  transform: translateY(-1px);
+}
+
+.action-btn.snooze-quick:active {
+  transform: translateY(0);
+}
+
+/* Pulsing animation */
+@keyframes pulse {
+  0%, 100% {
+    background: rgba(255, 68, 68, 0.1);
+  }
+  50% {
+    background: rgba(255, 68, 68, 0.2);
+  }
+}
+
+@keyframes border-pulse {
+  0%, 100% {
+    border-left-color: #ff4444;
+  }
+  50% {
+    border-left-color: #ff6666;
+  }
+}
+
+/* Due reminder styles */
+.reminder-item.due {
+  border-left: 4px solid #ff4444;
+  animation: pulse 2s ease-in-out infinite, 
+             border-pulse 2s ease-in-out infinite;
+}
+
+.reminder-item.due .reminder-time {
+  color: #ff4444;
+  font-weight: 700;
+  text-transform: uppercase;
 }

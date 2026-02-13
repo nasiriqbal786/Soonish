@@ -13,6 +13,7 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [selectedDuration, setSelectedDuration] = useState(30) // Default 30m
   const [currentView, setCurrentView] = useState('home') // 'home' | 'settings'
+  const [permissionError, setPermissionError] = useState(null) // State for permission error
 
   // Settings State
   const [settings, setSettings] = useState(() => {
@@ -56,6 +57,31 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
+  // Auto-cleanup dismissed reminders at midnight
+  useEffect(() => {
+    const scheduleMidnightCleanup = () => {
+      const now = new Date()
+      const midnight = new Date(now)
+      midnight.setHours(24, 0, 0, 0)
+      const msUntilMidnight = midnight - now
+
+      return setTimeout(() => {
+        // Remove reminders that have been completed (remaining === 0)
+        setReminders(prev => {
+          const cleaned = prev.filter(r => r.remaining > 0)
+          console.log(`Cleaned up ${prev.length - cleaned.length} old reminders`)
+          return cleaned
+        })
+
+        // Schedule next cleanup
+        scheduleMidnightCleanup()
+      }, msUntilMidnight)
+    }
+
+    const timer = scheduleMidnightCleanup()
+    return () => clearTimeout(timer)
+  }, [])
+
   const triggerWebNotification = (text) => {
     if (Notification.permission === 'granted') {
       new Notification('Soonish Reminder', {
@@ -67,31 +93,67 @@ function App() {
   }
 
   const handleAddReminder = async () => {
-    if (!inputValue.trim()) return
-
-    await notificationManager.requestPermissions()
-
-    const durationSeconds = selectedDuration * 60
-    const now = Date.now()
-    const targetTime = now + (durationSeconds * 1000)
-    // Use integer ID for Capacitor compatibility
-    const id = Math.floor(now % 2147483647)
-
-    const newReminder = {
-      id,
-      text: inputValue,
-      originalDuration: durationSeconds,
-      remaining: durationSeconds,
-      targetTime: targetTime,
-      createdAt: now,
-      notified: false
+    console.log('[App] handleAddReminder called')
+    if (!inputValue.trim()) {
+      console.log('[App] Input empty, ignoring')
+      return
     }
 
-    setReminders(prev => [newReminder, ...prev])
-    setInputValue('')
+    try {
+      setPermissionError(null) // Clear previous errors
+      console.log('[App] Requesting permissions...')
+      const permission = await notificationManager.requestPermissions()
+      console.log('[App] Permissions requested, result:', permission)
 
-    // Schedule Native Notification
-    await notificationManager.schedule('Soonish Reminder', newReminder.text, durationSeconds, id)
+      if (permission !== 'granted') {
+        const msg = permission === 'denied'
+          ? 'Notifications are blocked. Please enable them in your browser settings.'
+          : 'Notification permission is required to set reminders.'
+        setPermissionError(msg)
+        return
+      }
+
+      let durationSeconds = selectedDuration * 60
+      let text = inputValue
+
+      // Dev Helper: Check for [min] at start of text
+      const customTimeMatch = text.match(/^\[(\d+)\]\s*(.*)/)
+      if (customTimeMatch) {
+        const minutes = parseInt(customTimeMatch[1], 10)
+        if (!isNaN(minutes) && minutes > 0) {
+          durationSeconds = minutes * 60
+          text = customTimeMatch[2] || "Reminder" // Use captured text or default
+          console.log(`[Dev] Using custom duration: ${minutes}m`)
+        }
+      }
+
+      const now = Date.now()
+      const targetTime = now + (durationSeconds * 1000)
+      // Use integer ID for Capacitor compatibility
+      const id = Math.floor(now % 2147483647)
+
+      const newReminder = {
+        id,
+        text: text,
+        originalDuration: durationSeconds,
+        remaining: durationSeconds,
+        targetTime: targetTime,
+        createdAt: now,
+        notified: false
+      }
+
+      console.log('[App] Adding new reminder:', newReminder)
+      setReminders(prev => [newReminder, ...prev])
+      setInputValue('')
+
+      // Schedule Native Notification
+      console.log('[App] Scheduling notification...')
+      await notificationManager.schedule('Soonish Reminder', newReminder.text, durationSeconds, id)
+      console.log('[App] Reminder added successfully')
+    } catch (error) {
+      console.error('[App] Error adding reminder:', error)
+      alert('Failed to add reminder: ' + error.message)
+    }
   }
 
   const handleDelete = (id) => {
@@ -184,6 +246,12 @@ function App() {
               </button>
             </div>
           </header>
+          {permissionError && (
+            <div className="error-banner">
+              <span>{permissionError}</span>
+              <button onClick={() => setPermissionError(null)}>Dismiss</button>
+            </div>
+          )}
           <main>
             <section className="input-section">
               <ReminderInput value={inputValue} onChange={setInputValue} />

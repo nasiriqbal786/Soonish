@@ -7,22 +7,28 @@ class NotificationManager {
     }
 
     async requestPermissions() {
+        console.log('[NotificationManager] Requesting permissions...')
         if (this.platform === 'web') {
             if (Notification.permission === 'default') {
-                return await Notification.requestPermission()
+                const permission = await Notification.requestPermission()
+                console.log('[NotificationManager] Web permission result:', permission)
+                return permission
             }
+            console.log('[NotificationManager] Web permission already:', Notification.permission)
             return Notification.permission
         } else {
             const result = await LocalNotifications.requestPermissions()
+            console.log('[NotificationManager] Native permission result:', result)
             return result.display
         }
     }
 
     async schedule(title, body, seconds, id) {
+        console.log('[NotificationManager] Scheduling:', { title, body, seconds, id })
         if (this.platform === 'web') {
             // Web Notification logic handled by app timer
             // We just ensure permission here
-            this.requestPermissions()
+            await this.requestPermissions()
             return
         }
 

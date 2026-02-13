@@ -1,21 +1,40 @@
 .time-selector {
     display: flex;
-    justify-content: space-between;
-    gap: var(--spacing-sm);
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
     margin-bottom: var(--spacing-lg);
 }
 
 .time-pill {
-    flex: 1;
-    padding: var(--spacing-sm) 0;
+    padding: 10px 16px;
     border-radius: 50px;
     background: var(--surface-color);
     color: var(--text-muted);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     transition: all 0.2s ease;
     border: 1px solid transparent;
+    cursor: pointer;
+    flex: 1 1 auto;
+    /* Allow growth but respect content */
+    min-width: 60px;
+    /* Ensure buttons don't get too small */
+}
+
+/* Specific responsiveness for very small screens */
+@media (max-width: 360px) {
+    .time-selector {
+        justify-content: space-between;
+    }
+
+    .time-pill {
+        flex-basis: 30%;
+        /* 3 per row */
+        padding: 8px 4px;
+        /* Compact padding */
+    }
 }
 
 .time-pill:hover {

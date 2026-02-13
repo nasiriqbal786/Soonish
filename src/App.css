@@ -46,3 +46,42 @@ h1 {
   padding-bottom: env(safe-area-inset-bottom);
   padding-bottom: constant(safe-area-inset-bottom);
 }
+
+/* Error Banner */
+.error-banner {
+  background-color: #ff4444;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: var(--spacing-md);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideDown 0.3s ease-out;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.error-banner button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 12px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
