@@ -31,6 +31,28 @@ function App() {
     localStorage.setItem('soonish-reminders', JSON.stringify(reminders))
   }, [reminders])
 
+  // Request all necessary permissions on mount
+  useEffect(() => {
+    const requestAllPermissions = async () => {
+      if (Capacitor.getPlatform() !== 'web') {
+        try {
+          // Request notification permission
+          const result = await notificationManager.requestPermissions()
+          console.log('Permission result:', result)
+
+          // For Android 13+, show a one-time explanation if needed
+          if (result !== 'granted') {
+            console.log('Notifications not granted on startup')
+          }
+        } catch (error) {
+          console.error('Permission error:', error)
+        }
+      }
+    }
+
+    requestAllPermissions()
+  }, [])
+
   useEffect(() => {
     localStorage.setItem('soonish-settings', JSON.stringify(settings))
   }, [settings])

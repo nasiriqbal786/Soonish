@@ -15,7 +15,9 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
             android:launchMode="singleTask"
-            android:exported="true">
+            android:exported="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,12 +35,35 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <!-- Receiver for notification actions -->
+        <receiver android:name="com.capacitorjs.plugins.localnotifications.LocalNotificationReceiver"
+            android:exported="false" />
+            
     </application>
 
     <!-- Permissions -->
-
     <uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- Exact Alarm Permissions (Android 12+) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    
+    <!-- Full Screen Intent (for lock screen notifications) -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    
+    <!-- Wake Lock (to ensure notifications work when screen is off) -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <!-- Vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    
+    <!-- Post Notifications (Android 13+ / API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- Foreground Service (for critical alarms) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    
+    <!-- Disable battery optimization (optional but recommended) -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 </manifest>
