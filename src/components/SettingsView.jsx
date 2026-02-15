@@ -157,6 +157,25 @@ function SettingsView({ settings, onSave, onBack }) {
                         </div>
                     </div>
                 )}
+
+                {/* Support Development */}
+                <div className="setting-section">
+                    <h3>💜 Support Development</h3>
+                    <div className="info-card">
+                        <p>
+                            Soonish is free with no ads. If it helps you, consider supporting:
+                        </p>
+                        <button
+                            className="secondary-button"
+                            onClick={() => window.open('https://buymeacoffee.com/nasiriqbalq', '_blank')}
+                        >
+                            ☕ Buy Me a Coffee
+                        </button>
+                        <p style={{ fontSize: '12px', marginTop: '8px', opacity: 0.7 }}>
+                            100% optional. All features remain free forever.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     )
