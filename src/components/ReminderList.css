@@ -1,71 +1,71 @@
 .reminder-list {
-    width: 100%;
+  width: 100%;
 }
 
 .list-title {
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-md);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-md);
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .reminder-item {
-    background: var(--surface-color);
-    border-radius: 12px;
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: slideIn 0.3s ease-out;
+  background: var(--surface-color);
+  border-radius: 12px;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideIn 0.3s ease-out;
 }
 
 .reminder-info {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .reminder-text {
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--text-color);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-color);
 }
 
 .reminder-time {
-    font-size: 14px;
-    color: var(--accent-color);
-    margin-top: 4px;
+  font-size: 14px;
+  color: var(--accent-color);
+  margin-top: 4px;
 }
 
 .action-btn {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    transition: background 0.2s;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
 }
 
 .action-btn.done {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-color);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
 }
 
 .action-btn.done:hover {
-    background: var(--surface-color);
-    background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-color);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Snooze Actions */
@@ -99,18 +99,24 @@
 
 /* Pulsing animation */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     background: rgba(255, 68, 68, 0.1);
   }
+
   50% {
     background: rgba(255, 68, 68, 0.2);
   }
 }
 
 @keyframes border-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     border-left-color: #ff4444;
   }
+
   50% {
     border-left-color: #ff6666;
   }
@@ -119,12 +125,35 @@
 /* Due reminder styles */
 .reminder-item.due {
   border-left: 4px solid #ff4444;
-  animation: pulse 2s ease-in-out infinite, 
-             border-pulse 2s ease-in-out infinite;
+  animation: pulse 2s ease-in-out infinite,
+    border-pulse 2s ease-in-out infinite;
 }
 
 .reminder-item.due .reminder-time {
   color: #ff4444;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  opacity: 0.6;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-color);
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: var(--text-muted);
 }

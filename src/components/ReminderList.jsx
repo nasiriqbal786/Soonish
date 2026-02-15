@@ -1,7 +1,15 @@
 import './ReminderList.css'
 
 function ReminderList({ reminders, onDelete, onSnooze }) {
-    if (reminders.length === 0) return null
+    if (reminders.length === 0) {
+        return (
+            <div className="empty-state">
+                <div className="empty-icon">⏰</div>
+                <h3>No reminders yet</h3>
+                <p>Create your first reminder above!</p>
+            </div>
+        )
+    }
 
     return (
         <div className="reminder-list">

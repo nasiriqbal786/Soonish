@@ -10,6 +10,7 @@ import { notificationManager } from './services/NotificationManager'
 import { Capacitor } from '@capacitor/core'
 import { App as CapacitorApp } from '@capacitor/app'
 import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings'
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics'
 import './App.css'
 
 function App() {
@@ -152,6 +153,12 @@ function App() {
     }
   }, []) // Register ONCE on mount
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && inputValue.trim()) {
+      handleAddReminder()
+    }
+  }
+
   const handleAddReminder = async () => {
     console.log('[App] handleAddReminder called')
     if (!inputValue.trim()) {
@@ -208,20 +215,34 @@ function App() {
 
       // Schedule Native Notification
       console.log('[App] Scheduling notification...')
+      console.log('[App] Scheduling notification...')
       await notificationManager.schedule('Soonish Reminder', newReminder.text, durationSeconds, id)
       console.log('[App] Reminder added successfully')
+
+      // Haptic Feedback
+      if (Capacitor.isNativePlatform()) {
+        await Haptics.notification({ type: NotificationType.Success })
+      }
     } catch (error) {
       console.error('[App] Error adding reminder:', error)
       alert('Failed to add reminder: ' + error.message)
     }
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
+    if (Capacitor.isNativePlatform()) {
+      await Haptics.impact({ style: ImpactStyle.Medium })
+    }
     notificationManager.cancel(id)
     setReminders(prev => prev.filter(r => r.id !== id))
   }
 
   const handleSnooze = async (id, minutes = 30) => {
+    // Haptic Feedback
+    if (Capacitor.isNativePlatform()) {
+      await Haptics.impact({ style: ImpactStyle.Light })
+    }
+
     // Cancel existing notification
     await notificationManager.cancel(id)
 
@@ -320,7 +341,14 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Soonish</h1>
+        <h1>
+          Soonish
+          {reminders.filter(r => r.remaining > 0).length > 0 && (
+            <span className="reminder-badge">
+              {reminders.filter(r => r.remaining > 0).length}
+            </span>
+          )}
+        </h1>
         <div className="header-actions">
           <button
             className="icon-button"
@@ -381,7 +409,11 @@ function App() {
 
       <main>
         <section className="input-section">
-          <ReminderInput value={inputValue} onChange={setInputValue} />
+          <ReminderInput
+            value={inputValue}
+            onChange={setInputValue}
+            onKeyPress={handleKeyPress}
+          />
           <TimeSelector selectedDuration={selectedDuration} onSelect={setSelectedDuration} />
           <RemindButton onClick={handleAddReminder} disabled={!inputValue.trim()} />
         </section>
