@@ -266,14 +266,19 @@ function App() {
     }))
   }
 
-  const openAppSettings = () => {
+  const openAppSettings = async () => {
     if (Capacitor.getPlatform() !== 'web') {
-      import('@capacitor/core').then(mod => {
-        // Capacitor 6+ way (if using plugin) or just generic intent
-        // For simple intent we might need intent plugin or just rely on a known scheme if available
-        // But the user provided snippet uses window.open with _system which is good for Cordova/Capacitor
-        window.open('app-settings:', '_system')
-      })
+      try {
+        const { NativeSettings, AndroidSettings, IOSSettings } = await import('capacitor-native-settings')
+
+        await NativeSettings.open({
+          optionAndroid: AndroidSettings.ApplicationDetails,
+          optionIOS: IOSSettings.App
+        })
+      } catch (error) {
+        console.error('Error opening settings:', error)
+        alert('Could not open settings. Please open Settings app manually.')
+      }
     } else {
       alert('Please enable notifications in your browser settings.')
     }

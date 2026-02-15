@@ -33,9 +33,17 @@ function SettingsView({ settings, onSave, onBack }) {
         await checkPermissionStatus()
     }
 
-    const openSystemSettings = () => {
-        if (Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios') {
-            window.open('app-settings:', '_system')
+    const openSystemSettings = async () => {
+        if (Capacitor.getPlatform() !== 'web') {
+            try {
+                const { NativeSettings, AndroidSettings, IOSSettings } = await import('capacitor-native-settings')
+                await NativeSettings.open({
+                    optionAndroid: AndroidSettings.ApplicationDetails,
+                    optionIOS: IOSSettings.App
+                })
+            } catch (error) {
+                console.error('Error opening settings:', error)
+            }
         }
     }
 
@@ -142,7 +150,7 @@ function SettingsView({ settings, onSave, onBack }) {
                             </ol>
                             <button
                                 className="secondary-button"
-                                onClick={() => window.open('app-settings:', '_system')}
+                                onClick={openSystemSettings}
                             >
                                 Open Settings
                             </button>
