@@ -4,6 +4,17 @@
     justify-content: center;
     min-height: 100vh;
     padding: var(--spacing-lg);
+
+    /* Add safe area insets for Android/iOS notches and navigation bars */
+    padding-top: max(var(--spacing-lg), env(safe-area-inset-top));
+    padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+    padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+
+    /* Fallback for older browsers */
+    padding-top: max(var(--spacing-lg), constant(safe-area-inset-top));
+    padding-bottom: max(var(--spacing-lg), constant(safe-area-inset-bottom));
+
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }

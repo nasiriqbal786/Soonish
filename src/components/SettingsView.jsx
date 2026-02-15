@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Capacitor } from '@capacitor/core'
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings'
 import { notificationManager } from '../services/NotificationManager'
 import './SettingsView.css'
 
@@ -36,7 +37,6 @@ function SettingsView({ settings, onSave, onBack }) {
     const openSystemSettings = async () => {
         if (Capacitor.getPlatform() !== 'web') {
             try {
-                const { NativeSettings, AndroidSettings, IOSSettings } = await import('capacitor-native-settings')
                 await NativeSettings.open({
                     optionAndroid: AndroidSettings.ApplicationDetails,
                     optionIOS: IOSSettings.App

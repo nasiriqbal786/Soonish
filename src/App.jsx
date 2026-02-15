@@ -8,6 +8,8 @@ import WelcomeScreen from './components/WelcomeScreen'
 import Footer from './components/Footer'
 import { notificationManager } from './services/NotificationManager'
 import { Capacitor } from '@capacitor/core'
+import { App as CapacitorApp } from '@capacitor/app'
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings'
 import './App.css'
 
 function App() {
@@ -136,6 +138,21 @@ function App() {
     }
   }, [])
 
+  // Handle Android back button
+  useEffect(() => {
+    if (Capacitor.getPlatform() === 'android') {
+      CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+        if (currentView === 'settings') {
+          // If in settings, go back to home instead of exiting
+          setCurrentView('home')
+        } else if (!canGoBack) {
+          // If on home screen, exit the app
+          CapacitorApp.exitApp()
+        }
+      })
+    }
+  }, [currentView]) // Re-register when view changes
+
   const handleAddReminder = async () => {
     console.log('[App] handleAddReminder called')
     if (!inputValue.trim()) {
@@ -231,9 +248,14 @@ function App() {
 
   const handleDeferAll = async () => {
     const activeReminders = reminders.filter(r => r.remaining > 0)
-    if (activeReminders.length === 0) return
 
-    if (!window.confirm(`Defer ${activeReminders.length} reminders to tomorrow ${settings.deferTime}?`)) return
+    // Show friendly message if no active reminders
+    if (activeReminders.length === 0) {
+      alert('No active reminders to defer. Create a reminder first!')
+      return
+    }
+
+    if (!window.confirm(`Defer ${activeReminders.length} reminder${activeReminders.length > 1 ? 's' : ''} to tomorrow ${settings.deferTime}?`)) return
 
     // Parse Settings Time
     const [hours, minutes] = settings.deferTime.split(':').map(Number)
@@ -269,8 +291,6 @@ function App() {
   const openAppSettings = async () => {
     if (Capacitor.getPlatform() !== 'web') {
       try {
-        const { NativeSettings, AndroidSettings, IOSSettings } = await import('capacitor-native-settings')
-
         await NativeSettings.open({
           optionAndroid: AndroidSettings.ApplicationDetails,
           optionIOS: IOSSettings.App
