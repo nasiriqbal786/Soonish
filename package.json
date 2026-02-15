@@ -1,7 +1,7 @@
 {
   "name": "soonish",
   "private": true,
-  "version": "0.1.8",
+  "version": "0.1.16",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
     "build:apk": "npm run android && cd android && gradlew assembleDebug && node -e \"const pkg = require('../package.json'); const fs = require('fs'); fs.readdirSync('.').forEach(f => { if (f.startsWith('Soonish-') && f.endsWith('.apk')) { fs.unlinkSync(f); console.log('Deleted ' + f); } }); const dest = 'Soonish-v' + pkg.version + '.apk'; fs.copyFileSync('app/build/outputs/apk/debug/app-debug.apk', dest); console.log('Copied to ' + dest);\""
   },
   "dependencies": {
+    "@capacitor-firebase/analytics": "^8.0.1",
     "@capacitor/android": "^8.0.2",
     "@capacitor/app": "^8.0.1",
     "@capacitor/cli": "^8.0.2",
@@ -19,6 +20,7 @@
     "@capacitor/haptics": "^8.0.0",
     "@capacitor/local-notifications": "^8.0.0",
     "capacitor-native-settings": "^8.0.0",
+    "firebase": "^12.9.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

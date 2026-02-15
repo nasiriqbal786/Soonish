@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Capacitor } from '@capacitor/core'
+// import { FirebaseAnalytics } from '@capacitor-firebase/analytics'
 import { notificationManager } from '../services/NotificationManager'
 import './WelcomeScreen.css'
 
@@ -12,6 +13,13 @@ function WelcomeScreen({ onComplete }) {
         if (Capacitor.getPlatform() !== 'web') {
             // Request permissions upfront with context
             await notificationManager.requestPermissions()
+
+            // Analytics: Track onboarding completion
+            const { FirebaseAnalytics } = await import('@capacitor-firebase/analytics')
+            await FirebaseAnalytics.logEvent({
+                name: 'onboarding_completed',
+                params: {}
+            })
         }
 
         // Mark onboarding as complete

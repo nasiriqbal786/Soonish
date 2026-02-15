@@ -11,6 +11,7 @@ import { Capacitor } from '@capacitor/core'
 import { App as CapacitorApp } from '@capacitor/app'
 import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings'
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics'
+// import { FirebaseAnalytics } from '@capacitor-firebase/analytics' // Dynamic import used instead
 import './App.css'
 
 function App() {
@@ -222,6 +223,13 @@ function App() {
       // Haptic Feedback
       if (Capacitor.isNativePlatform()) {
         await Haptics.notification({ type: NotificationType.Success })
+
+        // Analytics: Track reminder creation
+        const { FirebaseAnalytics } = await import('@capacitor-firebase/analytics')
+        await FirebaseAnalytics.logEvent({
+          name: 'reminder_created',
+          params: { duration_minutes: selectedDuration }
+        })
       }
     } catch (error) {
       console.error('[App] Error adding reminder:', error)
@@ -232,6 +240,12 @@ function App() {
   const handleDelete = async (id) => {
     if (Capacitor.isNativePlatform()) {
       await Haptics.impact({ style: ImpactStyle.Medium })
+      // Analytics: Track completion
+      const { FirebaseAnalytics } = await import('@capacitor-firebase/analytics')
+      await FirebaseAnalytics.logEvent({
+        name: 'reminder_completed',
+        params: {}
+      })
     }
     notificationManager.cancel(id)
     setReminders(prev => prev.filter(r => r.id !== id))
@@ -241,6 +255,12 @@ function App() {
     // Haptic Feedback
     if (Capacitor.isNativePlatform()) {
       await Haptics.impact({ style: ImpactStyle.Light })
+      // Analytics: Track snooze
+      const { FirebaseAnalytics } = await import('@capacitor-firebase/analytics')
+      await FirebaseAnalytics.logEvent({
+        name: 'reminder_snoozed',
+        params: { snooze_duration: minutes }
+      })
     }
 
     // Cancel existing notification
@@ -293,6 +313,18 @@ function App() {
       await notificationManager.cancel(r.id)
       await notificationManager.schedule('Deferred Reminder', r.text, secondsUntilTomorrow, r.id)
     }))
+
+    // Analytics: Track defer all
+    if (Capacitor.isNativePlatform()) {
+      const { FirebaseAnalytics } = await import('@capacitor-firebase/analytics')
+      await FirebaseAnalytics.logEvent({
+        name: 'defer_all_triggered',
+        params: {
+          count: activeReminders.length,
+          defer_time: settings.deferTime
+        }
+      })
+    }
 
     setReminders(prev => prev.map(r => {
       if (r.remaining > 0) {

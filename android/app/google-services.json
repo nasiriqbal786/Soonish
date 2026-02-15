@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1031899548210",
+    "project_id": "soonish-v1",
+    "storage_bucket": "soonish-v1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031899548210:android:8066c13dcfb18adbeb8a2b",
+        "android_client_info": {
+          "package_name": "tech.buildnex.soonish"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLT_y41h9kFg2iTWFNFUtQA3_FoQ_s0BY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
