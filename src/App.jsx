@@ -266,6 +266,19 @@ function App() {
     }))
   }
 
+  const openAppSettings = () => {
+    if (Capacitor.getPlatform() !== 'web') {
+      import('@capacitor/core').then(mod => {
+        // Capacitor 6+ way (if using plugin) or just generic intent
+        // For simple intent we might need intent plugin or just rely on a known scheme if available
+        // But the user provided snippet uses window.open with _system which is good for Cordova/Capacitor
+        window.open('app-settings:', '_system')
+      })
+    } else {
+      alert('Please enable notifications in your browser settings.')
+    }
+  }
+
   if (!hasOnboarded) {
     return <WelcomeScreen onComplete={() => setHasOnboarded(true)} />
   }
