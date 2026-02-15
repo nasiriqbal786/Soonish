@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ReminderInput from './components/ReminderInput'
 import TimeSelector from './components/TimeSelector'
 import RemindButton from './components/RemindButton'
@@ -16,6 +16,7 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [selectedDuration, setSelectedDuration] = useState(30) // Default 30m
   const [currentView, setCurrentView] = useState('home') // 'home' | 'settings'
+  const currentViewRef = useRef(currentView) // Ref to track view inside listeners
   const [permissionError, setPermissionError] = useState(null) // State for permission error
 
   // Settings State
@@ -38,27 +39,23 @@ function App() {
     localStorage.setItem('soonish-reminders', JSON.stringify(reminders))
   }, [reminders])
 
-  // Request all necessary permissions on mount
+  // Sync Ref with State
   useEffect(() => {
-    const requestAllPermissions = async () => {
-      if (Capacitor.getPlatform() !== 'web') {
-        try {
-          // Request notification permission
-          const result = await notificationManager.requestPermissions()
-          console.log('Permission result:', result)
+    currentViewRef.current = currentView
+  }, [currentView])
 
-          // For Android 13+, show a one-time explanation if needed
-          if (result !== 'granted') {
-            console.log('Notifications not granted on startup')
-          }
-        } catch (error) {
-          console.error('Permission error:', error)
-        }
+  // Request permissions only if NOT showing welcome screen (i.e. already onboarded)
+  // If not onboarded, WelcomeScreen handles it.
+  useEffect(() => {
+    const checkPermissions = async () => {
+      // Only check silently, don't request if we are already onboarded
+      // This logic might need adjustment but for now removing the aggressive request
+      if (hasOnboarded && Capacitor.getPlatform() !== 'web') {
+        // Optionally check status here if needed, but we do it lazily
       }
     }
-
-    requestAllPermissions()
-  }, [])
+    checkPermissions()
+  }, [hasOnboarded])
 
   useEffect(() => {
     localStorage.setItem('soonish-settings', JSON.stringify(settings))
@@ -139,10 +136,12 @@ function App() {
   }, [])
 
   // Handle Android back button
+  // Handle Android back button
   useEffect(() => {
     if (Capacitor.getPlatform() === 'android') {
       CapacitorApp.addListener('backButton', ({ canGoBack }) => {
-        if (currentView === 'settings') {
+        // Use Ref to get current value inside closure
+        if (currentViewRef.current === 'settings') {
           // If in settings, go back to home instead of exiting
           setCurrentView('home')
         } else if (!canGoBack) {
@@ -151,7 +150,7 @@ function App() {
         }
       })
     }
-  }, [currentView]) // Re-register when view changes
+  }, []) // Register ONCE on mount
 
   const handleAddReminder = async () => {
     console.log('[App] handleAddReminder called')

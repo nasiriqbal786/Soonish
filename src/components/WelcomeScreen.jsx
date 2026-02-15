@@ -59,16 +59,6 @@ function WelcomeScreen({ onComplete }) {
                 >
                     {isLoading ? 'Setting up...' : 'Get Started'}
                 </button>
-
-                <button
-                    className="skip-button"
-                    onClick={() => {
-                        localStorage.setItem('soonish-onboarded', 'true')
-                        onComplete()
-                    }}
-                >
-                    Skip for now
-                </button>
             </div>
         </div>
     )
